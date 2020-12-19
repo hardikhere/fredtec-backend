@@ -1,17 +1,23 @@
-export const SchoolTypes = {
+const SchoolTypes = {
     DAY: 'DAY',
     PRE_COLLEGE: 'PRE_COLLEGE',
     PLAY: 'PLAY',
     BOARDING: 'BOARDING'
 };
-export const BoardTypes = {
+const BoardTypes = {
     CBSE: 'CBSE',
     RBSE: 'RBSE',
     ICSE: 'ICSE',
     ICGSE: 'ICGSE'
 };
-export const ClassificationTypes = {
+const ClassificationTypes = {
     COED: 'COED',
     BOYS: 'BOYS',
     GIRLS: 'GIRLS'
+}
+
+module.exports = {
+    SchoolTypes,
+    BoardTypes,
+    ClassificationTypes
 }

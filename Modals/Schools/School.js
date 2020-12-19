@@ -1,6 +1,6 @@
-import { BoardTypes, ClassificationTypes, SchoolTypes } from "../../utils/constants";
-import { ContactSchema } from "./ContactSchema";
-import { FeeSchema } from "./FeeSchema";
+const { BoardTypes, ClassificationTypes, SchoolTypes } = require("../../utils/constants");
+const ContactSchema = require("./ContactSchema");
+const FeeSchema = require("./FeeSchema");
 
 const mongoose = require("mongoose");
 const { PRE_COLLEGE, DAY, BOARDING, PLAY } = SchoolTypes;
@@ -14,7 +14,7 @@ const SchoolSchema = new mongoose.Schema({
         required: true
     },
     schoolId: {
-        type: ID,
+        type: String,
         unique: true,
         required: true
     },
@@ -53,4 +53,5 @@ const SchoolSchema = new mongoose.Schema({
     subjects: [String]
 }, { timestamps: true });
 
-export default new mongoose.model("School", SchoolSchema);
+const School = mongoose.model("School", SchoolSchema);
+module.exports = School;
