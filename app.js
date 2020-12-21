@@ -6,6 +6,7 @@ const cors = require("cors");
 require("dotenv").config();
 const app = express();
 const SchoolRoutes = require("./Routes/School");
+const SendResponse = require("./utils/Responses");
 connect_db();// connect to mongoDB
 
 
@@ -23,7 +24,7 @@ const BaseAPI = "/api/v1";
 app.use(BaseAPI, SchoolRoutes);
 // health check API
 app.use("/health-check", (req, res) => {
-    res.send("Healthy");
+    SendResponse(res, 200, {}, "Healthy");
 });
 
 

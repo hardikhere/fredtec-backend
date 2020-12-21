@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const FeeSchema = new mongoose.Schema({
-    anualFee: Number,
+    annualFee: Number,
     admissionFee: Number,
     applicationFee: Number,
     securityFee: Number
