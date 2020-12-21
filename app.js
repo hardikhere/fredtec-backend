@@ -14,7 +14,7 @@ connect_db();// connect to mongoDB
 app.use(cors());
 app.use(
     bodyParser.urlencoded({
-        extended: true,
+        extended: false,
     }));
 app.use(bodyParser.json())
 app.use(morgan("dev"));
