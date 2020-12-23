@@ -41,7 +41,18 @@ const updateSchool = async (req, res) => {
     })
 }
 
+const deleteSchool = async (req, res) => {
+    School.findOneAndDelete({ schoolId: req.params.schoolId }, (err, doc) => {
+        if (err)
+            return SendResponse(res, 400, {}, "Can not delete School from DB", true);
+        if (!doc)
+            return SendResponse(res, 404, {}, "School not found!", true);
+        SendResponse(res, 200, doc, "School Successfully Deleted!");
+    })
+}
+
 module.exports = {
     createSchool,
-    updateSchool
+    updateSchool,
+    deleteSchool
 }
