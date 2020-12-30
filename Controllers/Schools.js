@@ -49,10 +49,37 @@ const deleteSchool = async (req, res) => {
             return SendResponse(res, 404, {}, "School not found!", true);
         SendResponse(res, 200, doc, "School Successfully Deleted!");
     })
+};
+
+//unfiltered API to fetch Schools Paginated
+const getSchoolProfiles = async (req, res) => {
+
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = parseInt(req.query.skip) || 0;
+    if (limit > 20) {
+        return SendResponse(res, 400, {}, "Maximum value of limit is 20", true);
+    }
+    try {
+        School.find({}, "-createdAt -updatedAt -__v -_id")
+            .limit(limit)
+            .skip(skip)
+            .then(docs => {
+                let toSend = {
+                    results: docs,
+                    nextSkip: docs.length < limit ? null : skip + limit
+                };
+                return SendResponse(res, 200, toSend, "Fetched!");
+            })
+
+    } catch (err) {
+        return SendResponse(res, 500, {}, "Internal Server Error!");
+    }
+
 }
 
 module.exports = {
     createSchool,
     updateSchool,
-    deleteSchool
+    deleteSchool,
+    getSchoolProfiles
 }
