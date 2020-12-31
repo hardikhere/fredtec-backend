@@ -1,8 +1,9 @@
 const { BoardTypes, ClassificationTypes, SchoolTypes } = require("../../utils/constants");
 const ContactSchema = require("./ContactSchema");
 const FeeSchema = require("./FeeSchema");
-
+const { OtherInfoSchema, travelSchema } = require("./OtherInfoSchema");
 const mongoose = require("mongoose");
+const InfraSchema = require("./InfraSchema");
 const { PRE_COLLEGE, DAY, BOARDING, PLAY } = SchoolTypes;
 const { CBSE, ICGSE, ICSE, RBSE } = BoardTypes;
 const { BOYS, GIRLS, COED } = ClassificationTypes
@@ -50,7 +51,11 @@ const SchoolSchema = new mongoose.Schema({
     }],
     parentRating: Number,
     fredtecScore: Number,
-    subjects: [String]
+    subjects: [String],
+    infraDetails: InfraSchema,
+    otherInfo: OtherInfoSchema,
+    travelInfo: travelSchema
+    
 }, { timestamps: true });
 
 const School = mongoose.model("School", SchoolSchema);
