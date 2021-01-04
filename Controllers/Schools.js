@@ -6,7 +6,7 @@ const generateSchoolId = (schoolName) => {
     schoolName = schoolName.split(" ")[0];
     schoolName = schoolName.trim();
     return `${schoolName}-${(Date.now()).toString(16)}`;
-}
+};
 
 
 const createSchool = async (req, res) => {
@@ -36,7 +36,7 @@ const updateSchool = async (req, res) => {
 
         return SendResponse(res, 200, doc, "Successfully Updated");
     })
-}
+};
 
 const deleteSchool = async (req, res) => {
     School.findOneAndDelete({ schoolId: req.params.schoolId }, (err, doc) => {
@@ -81,7 +81,7 @@ const getSchool = async (req, res) => {
     School.findOne({ schoolId }).then(doc => {
         return SendResponse(res, 200, doc, "OK");
     });
-}
+};
 
 module.exports = {
     createSchool,
