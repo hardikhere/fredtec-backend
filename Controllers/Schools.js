@@ -1,4 +1,3 @@
-const { update } = require("../Modals/Schools/School");
 const School = require("../Modals/Schools/School");
 const SendResponse = require("../utils/Responses");
 
@@ -20,9 +19,7 @@ const createSchool = async (req, res) => {
         else
             return SendResponse(res, 400, {}, "Not Able To Save School Profile!", true);
 
-    }).catch(err => {
-        return SendResponse(res, 500, {}, "Internal Server Error!", err);
-    })
+    });
 };
 
 
@@ -74,12 +71,22 @@ const getSchoolProfiles = async (req, res) => {
     } catch (err) {
         return SendResponse(res, 500, {}, "Internal Server Error!");
     }
+};
 
+//api to get single populates school profile
+const getSchool = async (req, res) => {
+    const schoolId = req.params.schoolId;
+    if (!schoolId)
+        return SendResponse(res, 400, {}, "id is required!", true);
+    School.findOne({ schoolId }).then(doc => {
+        return SendResponse(res, 200, doc, "OK");
+    });
 }
 
 module.exports = {
     createSchool,
     updateSchool,
     deleteSchool,
-    getSchoolProfiles
+    getSchoolProfiles,
+    getSchool
 }
