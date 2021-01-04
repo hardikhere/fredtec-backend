@@ -83,10 +83,26 @@ const getSchool = async (req, res) => {
     });
 };
 
+//api to search school by name or lacation
+const searchSchools = async (req, res) => {
+    const { limit, query } = req.query;
+    School.find({
+        "$or": [
+            { schoolName: { "$regex": `${query}`, "$options": "i" } },
+            {
+                "contactDetails.address": { "$regex": `${query}`, "$options": "i" }
+            }
+        ]
+    }).limit(limit ? limit : 40).then((docs) => {
+        return SendResponse(res, 200, docs, "OK!", docs.length > 0 ? false : true)
+    })
+}
+
 module.exports = {
     createSchool,
     updateSchool,
     deleteSchool,
     getSchoolProfiles,
-    getSchool
+    getSchool,
+    searchSchools
 }
