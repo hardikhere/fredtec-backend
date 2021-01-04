@@ -7,7 +7,7 @@ const basicWrapper = async (req, res, controller) => {
     try {
         return await controller(req, res);
     } catch (err) {
-        return SendResponse(res, 500, {}, "Internal Server Error!", err);
+        return SendResponse(res, 500, {}, "Internal Server Error!", err.message);
     }
 }
 
