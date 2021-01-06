@@ -4,6 +4,7 @@ const FeeSchema = require("./FeeSchema");
 const { OtherInfoSchema, travelSchema } = require("./OtherInfoSchema");
 const mongoose = require("mongoose");
 const InfraSchema = require("./InfraSchema");
+const QuerySchema = require("./QuerySchema");
 const { PRE_COLLEGE, DAY, BOARDING, PLAY } = SchoolTypes;
 const { CBSE, ICGSE, ICSE, RBSE } = BoardTypes;
 const { BOYS, GIRLS, COED } = ClassificationTypes
@@ -54,8 +55,9 @@ const SchoolSchema = new mongoose.Schema({
     subjects: [String],
     infraDetails: InfraSchema,
     otherInfo: OtherInfoSchema,
-    travelInfo: travelSchema
-    
+    travelInfo: travelSchema,
+    queries: [QuerySchema]
+
 }, { timestamps: true });
 
 const School = mongoose.model("School", SchoolSchema);

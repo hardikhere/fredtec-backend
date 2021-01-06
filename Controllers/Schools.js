@@ -1,12 +1,7 @@
 const School = require("../Modals/Schools/School");
+const { generateSchoolId } = require("../utils/common");
 const SendResponse = require("../utils/Responses");
 
-const generateSchoolId = (schoolName) => {
-    if (typeof schoolName !== "string") return;
-    schoolName = schoolName.split(" ")[0];
-    schoolName = schoolName.trim();
-    return `${schoolName}-${(Date.now()).toString(16)}`;
-};
 
 
 const createSchool = async (req, res) => {
@@ -96,6 +91,19 @@ const searchSchools = async (req, res) => {
     }).limit(limit ? limit : 40).then((docs) => {
         return SendResponse(res, 200, docs, "OK!", docs.length > 0 ? false : true)
     })
+};
+
+//in progress
+const addQuery = async (req, res) => {
+    const { schoolId } = req.params;
+    const { query } = req.body;
+    School.findOneAndUpdate({ schoolId }, {
+        $push: {
+            queries: query
+        }
+    }, (err, doc) => {
+        return SendResponse(res, 200, doc, "OK!");
+    })
 }
 
 module.exports = {
@@ -104,5 +112,6 @@ module.exports = {
     deleteSchool,
     getSchoolProfiles,
     getSchool,
-    searchSchools
+    searchSchools,
+    addQuery
 }
