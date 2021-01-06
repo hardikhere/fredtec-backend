@@ -93,7 +93,7 @@ const searchSchools = async (req, res) => {
     })
 };
 
-//in progress
+
 const addQuery = async (req, res) => {
     const { schoolId } = req.params;
     const { query } = req.body;
@@ -102,7 +102,11 @@ const addQuery = async (req, res) => {
             queries: query
         }
     }, (err, doc) => {
-        return SendResponse(res, 200, doc, "OK!");
+        if (doc)
+            return SendResponse(res, 200, doc, "OK!");
+        if (!doc)
+            return SendResponse(res, 404, {}, "School Not Found", true);
+        return SendResponse(res, 400, {}, err.message, err);
     })
 }
 
