@@ -1,11 +1,8 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
-//incomplete
+//we are using _id for users
 const UserSchema = new mongoose.Schema({
-    userId: {
-        unique: true,
-        required: true
-    },
     isAdmin: {
         type: Boolean,
         default: false
@@ -21,9 +18,31 @@ const UserSchema = new mongoose.Schema({
     isVerified: {
         type: Boolean,
         default: false
+    },
+    userName: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    password: {
+        type: String,
+        required: true,
+        trim: true
     }
 }, { timestamps: true });
 
+
+
+UserSchema.methods = {
+    validPassword: async (plainPassword, hash) => {
+        await bcrypt.compare(plainPassword, hash, (err, isMatch) => {
+            if (isMatch) {
+                return true;
+            }
+            return false;
+        })
+    }
+}
 
 const User = mongoose.model("User", UserSchema);
 module.exports = User;

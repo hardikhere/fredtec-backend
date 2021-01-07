@@ -6,6 +6,7 @@ const cors = require("cors");
 require("dotenv").config();
 const app = express();
 const SchoolRoutes = require("./Routes/School");
+const UserRoutes = require("./Routes/User");
 const SendResponse = require("./utils/Responses");
 const helmet = require("helmet");
 connect_db();// connect to mongoDB
@@ -13,7 +14,7 @@ connect_db();// connect to mongoDB
 var whitelist = ['http://localhost:3000/', 'http://localhost:8080/'];
 var corsOptions = {
     origin: function (origin, callback) {
-        if(!origin) return callback(null, true);
+        if (!origin) return callback(null, true);
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
@@ -35,6 +36,8 @@ app.use(morgan(process.env.NODE_ENV || "dev"));
 //API routes
 const BaseAPI = "/api/v1";
 app.use(BaseAPI, SchoolRoutes);
+app.use(BaseAPI, UserRoutes);
+
 // health check API
 app.use("/health-check", (req, res) => {
     SendResponse(res, 200, {}, "Healthy");
