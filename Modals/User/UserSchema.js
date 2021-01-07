@@ -34,7 +34,8 @@ const UserSchema = new mongoose.Schema({
 
 
 UserSchema.methods = {
-    validPassword: async (plainPassword, hash) => {
+    validPassword: async (plainPassword) => {
+        const hash = this.password;
         await bcrypt.compare(plainPassword, hash, (err, isMatch) => {
             if (isMatch) {
                 return true;
