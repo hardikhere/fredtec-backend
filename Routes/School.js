@@ -25,7 +25,7 @@ router.post('/create-school', (req, res) =>
 router.post('/update-school/:schoolId', updateSchool);
 router.delete('/delete-school/:schoolId', deleteSchool);
 router.get('/schools', getSchoolProfiles);
-router.post('/school/review', reviewSchool);
+router.post('/school/review/:schoolId/:userId', reviewSchool);
 router.get('/school/:schoolId', getSchool);
 router.get('/search', (req, res) => basicWrapper(req, res, searchSchools));
 module.exports = router;

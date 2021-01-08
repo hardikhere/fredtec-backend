@@ -3,8 +3,8 @@ const { ObjectId } = mongoose.Schema;
 
 const ReviewSchema = new mongoose.Schema(
 	{
-		userId: {
-			type: String,
+		userCredential: {
+			type: ObjectId,
 			ref: 'User',
 		},
 		schoolCredential: {
@@ -30,10 +30,6 @@ const ReviewSchema = new mongoose.Schema(
 			//main content of review
 			type: String,
 			maxlength: 300,
-			required: true,
-		},
-		date: {
-			type: String,
 			required: true,
 		},
 	},

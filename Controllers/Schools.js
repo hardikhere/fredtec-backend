@@ -1,3 +1,4 @@
+const ReviewSchema = require('../Modals/Schools/Review');
 const School = require('../Modals/Schools/School');
 const { generateSchoolId } = require('../utils/common');
 const SendResponse = require('../utils/Responses');
@@ -107,9 +108,46 @@ const addQuery = async (req, res) => {
 
 //review schoool
 const reviewSchool = (req, res) => {
-	console.log(req);
-	console.log('tater sir is best');
+	const { schoolId, userId } = req.params;
+	School.findById(schoolId).exec((err, school) => {
+		if (err) {
+			return res.status(400).json({
+				error: 'School not found in DB',
+			});
+		}
+		req.body.schoolCredentials = school;
+	});
+	User.findById(userId).exec((err, user) => {
+		if (err) {
+			return res.status(400).json({
+				error: 'User not found in DB',
+			});
+		}
+		req.body.userCredentials = user;
+	});
+	const review = new ReviewSchema(req.body);
+
+	review.save((err, item) => {
+		if (err) {
+			return res.status(400).json({
+				error: 'Failed to publish review',
+			});
+		}
+		return SendResponse(res, 200, item, 'OK!');
+	});
 };
+
+// const getSchoolById = (req, res, id, next) => {
+// 	School.findById(id).exec((err, school) => {
+// 		if (err) {
+// 			return res.status(400).json({
+// 				error: 'Category not found in DB',
+// 			});
+// 		}
+// 		req.school = school;
+// 	});
+// 	next();
+// };
 
 module.exports = {
 	createSchool,
