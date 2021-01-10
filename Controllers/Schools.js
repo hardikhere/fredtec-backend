@@ -108,6 +108,23 @@ const addQuery = async (req, res) => {
             return SendResponse(res, 404, {}, "School Not Found", true);
         return SendResponse(res, 400, {}, err.message, err);
     })
+};
+
+const addReview = async (req, res) => {
+    const { schoolId, userId } = req.params;
+    let { review } = req.body;
+    review.by = userId;
+    School.findOneAndUpdate({ schoolId }, {
+        $push: {
+            reviews: review
+        }
+    }, (err, doc) => {
+        if (doc)
+            return SendResponse(res, 200, doc, "OK!");
+        if (!doc)
+            return SendResponse(res, 404, {}, "School Not Found", true);
+        return SendResponse(res, 400, {}, err.message, err);
+    })
 }
 
 module.exports = {
@@ -117,5 +134,6 @@ module.exports = {
     getSchoolProfiles,
     getSchool,
     searchSchools,
-    addQuery
+    addQuery,
+    addReview
 }

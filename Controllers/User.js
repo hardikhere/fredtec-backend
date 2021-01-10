@@ -21,8 +21,8 @@ let checkToken = (req, res, next) => {
     if (!token)
         return SendResponse(res, 403, {}, "Token is Missing", true);
 
-    if (token.startsWith("Bearer "));
-    token = token.slice(7, token.length);
+    if (token.startsWith("Bearer "))
+        token = token.slice(7, token.length);
 
     if (token) {
         jwt.verify(token, process.env.JWTSECRET, (err, decoded) => {
