@@ -1,5 +1,12 @@
 const express = require("express");
-const { createSchool, updateSchool, deleteSchool, getSchoolProfiles, getSchool, searchSchools, addQuery } = require("../Controllers/Schools");
+const { createSchool,
+    updateSchool,
+    deleteSchool,
+    getSchoolProfiles,
+    getSchool,
+    searchSchools,
+    addQuery,
+    addReview } = require("../Controllers/Schools");
 const SendResponse = require("../utils/Responses");
 const router = express.Router();
 
@@ -19,5 +26,7 @@ router.get("/schools", getSchoolProfiles);
 router.get("/school/:schoolId", getSchool);
 router.get("/search", (req, res) => basicWrapper(req, res, searchSchools));
 router.post("/query/:schoolId", (req, res) => basicWrapper(req, res, addQuery));
+
+router.post("/review/:schoolId/:userId", addReview)
 
 module.exports = router;
