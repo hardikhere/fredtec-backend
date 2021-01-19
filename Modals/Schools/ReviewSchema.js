@@ -15,6 +15,14 @@ const ReviewSchema = new mongoose.Schema({
     by: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: "User"
+    },
+    title: {
+        type: String,
+        maxlength: 40,
+    },
+    body: {
+        type: String,
+        maxlength: 1000
     }
 }, { timestamps: true });
 

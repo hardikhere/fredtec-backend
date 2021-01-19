@@ -16,6 +16,10 @@ const SchoolSchema = new mongoose.Schema({
         maxlength: 40,
         required: true
     },
+    email: {
+        type: String,
+        maxlength: 90
+    },
     schoolId: {
         type: String,
         unique: true,
@@ -58,7 +62,10 @@ const SchoolSchema = new mongoose.Schema({
     otherInfo: OtherInfoSchema,
     travelInfo: travelSchema,
     queries: [QuerySchema],
-    reviews:[ReviewSchema]
+    reviews: [ReviewSchema],
+    credits: {
+        type: Number,
+    }
 
 }, { timestamps: true });
 
