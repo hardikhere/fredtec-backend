@@ -1,4 +1,5 @@
 const express = require("express");
+const { uploadImage } = require("../Controllers/Admin");
 const { createSchool,
     updateSchool,
     deleteSchool,
@@ -27,6 +28,7 @@ router.get("/school/:schoolId", getSchool);
 router.get("/search", (req, res) => basicWrapper(req, res, searchSchools));
 router.post("/query/:schoolId", (req, res) => basicWrapper(req, res, addQuery));
 
-router.post("/review/:schoolId/:userId", addReview)
+router.post("/review/:schoolId/:userId", addReview);
+router.post("/upload-image", uploadImage);
 
 module.exports = router;

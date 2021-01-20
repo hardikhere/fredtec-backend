@@ -1,3 +1,5 @@
+const AWS = require("aws-sdk");
+
 const SchoolTypes = {
     DAY: 'DAY',
     PRE_COLLEGE: 'PRE_COLLEGE',
@@ -16,8 +18,22 @@ const ClassificationTypes = {
     GIRLS: 'GIRLS'
 }
 
+const AWSconfig = {
+    BUCKET_NAME: "fredmat-schools",
+    IAM_USER_KEY: "AKIAIJZIL4QV45AAQC4A",
+    IAM_USER_SECRET: "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"
+};
+
+const { IAM_USER_KEY, IAM_USER_SECRET } = AWSconfig;
+
+AWSconfig.s3 = new AWS.S3({
+    accessKeyId: IAM_USER_KEY,
+    secretAccessKey: IAM_USER_SECRET
+});
+
 module.exports = {
     SchoolTypes,
     BoardTypes,
-    ClassificationTypes
+    ClassificationTypes,
+    AWSconfig
 }
