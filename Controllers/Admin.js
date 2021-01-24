@@ -4,7 +4,7 @@ const formidable = require("formidable");
 const { s3, BUCKET_NAME } = AWSconfig;
 const fs = require("fs");
 
-//incomplete will refactor it later
+
 const uploadImage = (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;

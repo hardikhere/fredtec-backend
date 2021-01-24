@@ -3,9 +3,13 @@ const bcrypt = require("bcrypt");
 
 //we are using _id for users
 const UserSchema = new mongoose.Schema({
-    isAdmin: {
+    isSchoolAdmin: {
         type: Boolean,
         default: false
+    },
+    adminOf: {
+        type: String,
+        ref: "School"
     },
     email: {
         type: String,
@@ -31,7 +35,12 @@ const UserSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-
+UserSchema.virtual("adminOfDetailed", {
+    ref: "School",
+    localField: "adminOf",
+    foreignField: "schoolId",
+    justOne: false
+});
 
 UserSchema.methods = {
     validPassword: async (plainPassword) => {

@@ -16,6 +16,10 @@ const SchoolSchema = new mongoose.Schema({
         maxlength: 40,
         required: true
     },
+    admin: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "User"
+    },
     email: {
         type: String,
         maxlength: 90
@@ -47,7 +51,9 @@ const SchoolSchema = new mongoose.Schema({
     yearOfEstablishment: {
         type: Number
     },
-    contactDetails: ContactSchema,
+    phoneNumber: String,
+    website: String,
+    address: String,
     about: {
         type: String,
         minlength: 10
