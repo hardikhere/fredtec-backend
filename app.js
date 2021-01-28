@@ -12,7 +12,7 @@ const helmet = require("helmet");
 connect_db();// connect to mongoDB
 
 var whitelist = ['http://localhost:3000/', 'http://localhost:8080/',
-    "https://fredmat-backend.herokuapp.com/"
+    "https://fredmat-frontend.hardikhere.vercel.app/"
 ];
 var corsOptions = {
     origin: function (origin, callback) {
