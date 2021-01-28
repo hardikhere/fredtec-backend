@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 
 const OtherInfoSchema = new mongoose.Schema({
     entryAge: Number,
-    numberOfStudents: Number,
+    numberOfStudents: {
+        type: String,
+        enum: ["1-100", "100-500", "500-1000", "1000-5000", "5000+"]
+    },
+    numberOfTeachers: Number,
     languagesUsed: [String],
     stRatio: {
         type: String,
@@ -14,7 +18,8 @@ const OtherInfoSchema = new mongoose.Schema({
     outdoorSports: [String],
     indoorSports: [String],
     clubs: [String],
-    arts: [String]
+    arts: [String],
+    hasPlayground: Boolean
 });
 
 const travelSchema = new mongoose.Schema({

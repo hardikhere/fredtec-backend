@@ -11,7 +11,9 @@ const SendResponse = require("./utils/Responses");
 const helmet = require("helmet");
 connect_db();// connect to mongoDB
 
-var whitelist = ['http://localhost:3000/', 'http://localhost:8080/'];
+var whitelist = ['http://localhost:3000/', 'http://localhost:8080/',
+    "https://fredmat-backend.herokuapp.com/"
+];
 var corsOptions = {
     origin: function (origin, callback) {
         if (!origin) return callback(null, true);
