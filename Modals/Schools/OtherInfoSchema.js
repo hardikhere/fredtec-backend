@@ -8,6 +8,7 @@ const OtherInfoSchema = new mongoose.Schema({
     },
     numberOfTeachers: Number,
     languagesUsed: [String],
+    medium: String,//make it enum
     stRatio: {
         type: String,
         maxlength: 6
@@ -17,8 +18,7 @@ const OtherInfoSchema = new mongoose.Schema({
     gradeTo: Number,
     outdoorSports: [String],
     indoorSports: [String],
-    clubs: [String],
-    arts: [String],
+    activities: [String],
     hasPlayground: Boolean
 });
 

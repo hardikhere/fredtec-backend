@@ -61,6 +61,7 @@ const SchoolSchema = new mongoose.Schema({
     imageUrls: [{
         type: String
     }],
+    logoUrl: String,
     parentRating: Number,
     fredmatScore: Number,
     subjects: [String],
