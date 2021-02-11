@@ -2,10 +2,7 @@ const mongoose = require("mongoose");
 
 const OtherInfoSchema = new mongoose.Schema({
     entryAge: Number,
-    numberOfStudents: {
-        type: String,
-        enum: ["1-100", "100-500", "500-1000", "1000-5000", "5000+"]
-    },
+    numberOfStudents: Number,
     numberOfTeachers: Number,
     languagesUsed: [String],
     medium: String,//make it enum
