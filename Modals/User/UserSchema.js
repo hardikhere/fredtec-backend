@@ -13,7 +13,8 @@ const UserSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        maxlength: 50
+        maxlength: 50,
+        required: true
     },
     mobileNumber: {
         type: String,
@@ -25,7 +26,6 @@ const UserSchema = new mongoose.Schema({
     },
     userName: {
         type: String,
-        required: true,
         trim: true
     },
     password: {
@@ -45,6 +45,7 @@ UserSchema.virtual("adminOfDetailed", {
 UserSchema.methods = {
     validPassword: async (plainPassword) => {
         const hash = this.password;
+        console.log(hash)
         await bcrypt.compare(plainPassword, hash, (err, isMatch) => {
             if (isMatch) {
                 return true;

@@ -45,11 +45,9 @@ let checkToken = (req, res, next) => {
 };
 
 const registerUser = (req, res) => {
-    const { userDetails } = req.body;
     const errors = [];
-    const { email, password, userName } = userDetails;
-    if (!userDetails)
-        errors.push("userDetails Object is required");
+    const { email, password } = req.body;
+
     if (!email)
         errors.push("email is required");
     if (!password)
@@ -61,9 +59,9 @@ const registerUser = (req, res) => {
     User.findOne({ email }, (err, doc) => {
         if (doc)
             return SendResponse(res, 400, {}, "User Already Registered!", true);
-        var newUser = new User(userDetails);
+        var newUser = new User(req.body);
         const saltRounds = 10;
-        bcrypt.hash(userDetails.password, saltRounds, function (err, hash) {
+        bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
             if (err) return SendResponse(res, 400, {}, "Error Occured", err);
             newUser.password = hash;
             newUser.save().then(async (doc) => {
@@ -80,13 +78,29 @@ const registerUser = (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-    //will do later
-    const {email,password} = req.body;
-    
+    const { email, password } = req.body;
+    User.findOne({ email }).then(async (doc) => {
+        if (doc) {
+            await bcrypt.compare(password, doc.password, async(err, isMatch) => {
+                if (isMatch) {
+                    const token = await jwtGenerator(doc._id);
+                    doc.password = undefined;
+                    return SendResponse(res, 200, {
+                        user: doc,
+                        token
+                    }, "Success");
+                }
+                return SendResponse(res, 400, false, "Incorrect Password", true);
+            })
+        } else {
+            return SendResponse(res, 403, false, "User Not Registered", true);
+        }
+    })
 };
 
 module.exports = {
     registerUser,
     checkUser,
-    checkToken
+    checkToken,
+    loginUser
 }
