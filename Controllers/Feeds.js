@@ -16,14 +16,16 @@ const addNewFeed = (req, res) => {
 
 const deleteFeed = (req, res) => {
     const { _id } = req.params;
-    Feeds.findById({ _id }).then((doc) => {
-        return SendResponse(res, 200, doc, "Fetched")
+    Feeds.deleteOne({ _id }, (err) => {
+        if (!err) return SendResponse(res, 200, {}, "Deleted")
+        return SendResponse(res, 400, err, "Could not Delete the feed", true)
     })
 }
 
 const getSchoolFeeds = (req, res) => {
     const { sid } = req.params;
-    Feeds.find({sid}).then((docs) => {
+    Feeds.find({ sid }).sort({"createdAt": -1})
+    .then((docs) => {
         return SendResponse(res, 200, docs);
     })
 }

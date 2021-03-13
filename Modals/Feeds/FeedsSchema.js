@@ -15,7 +15,7 @@ const FeedsSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-});
+}, { timestamps: true });
 const Feeds = mongoose.model("Feeds", FeedsSchema);
 
 module.exports = Feeds;
