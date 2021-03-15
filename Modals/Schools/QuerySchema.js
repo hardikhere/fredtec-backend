@@ -25,8 +25,7 @@ const QuerySchema = new mongoose.Schema({
         type: String
     },
     grade: {// need to improve
-        type: Number,
-        max: 12,
+        type: String
     },
     academicRecords: [String]// image urls (aws s3)
 });

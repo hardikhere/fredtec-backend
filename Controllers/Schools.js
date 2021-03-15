@@ -102,6 +102,8 @@ const addQuery = async (req, res) => {
             queries: query
         }
     }, (err, doc) => {
+        if (err)
+            return SendResponse(res, 500, err, "Error Occured", true);
         if (doc)
             return SendResponse(res, 200, doc, "OK!");
         if (!doc)
