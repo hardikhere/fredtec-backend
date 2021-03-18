@@ -93,7 +93,8 @@ const searchSchools = async (req, res) => {
         classification,
         fees,
         schoolType,
-        skip
+        skip,
+        sortBy
     } = req.query;
     let FilterArray = [];
 
@@ -122,9 +123,9 @@ const searchSchools = async (req, res) => {
             classification: { "$in": classification }
         })
     }
-    School.find({
+    School.find(FilterArray.length > 0 ? {
         "$or": FilterArray
-    }, "-queries")
+    } : {}, "-queries")
         .skip(skip ? parseInt(skip) : 0)
         .limit(limit ? parseInt(limit) : 40)
         .then((docs) => {
