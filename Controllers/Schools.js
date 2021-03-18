@@ -79,18 +79,57 @@ const getSchool = async (req, res) => {
 };
 
 //api to search school by name or lacation
+// we have 
+//query -->string
+//type of school-->[String]
+//board-->[String]
+//classification-->[String]
+//fees-->[String]
+
 const searchSchools = async (req, res) => {
-    const { limit, query } = req.query;
+    let { limit,
+        query,
+        board,
+        classification,
+        fees,
+        schoolType,
+        skip
+    } = req.query;
+    let FilterArray = [];
+
+    if (query) {
+        query = query.split(",");
+        FilterArray = FilterArray.concat([{ schoolName: { "$regex": `${query}`, "$options": "i" } },
+        {
+            "contactDetails.address": { "$regex": `${query}`, "$options": "i" }
+        }])
+    }
+    if (board) {
+        board = board.split(",")
+        FilterArray.push({
+            board: { "$in": board }
+        });
+    }
+    if (schoolType) {
+        schoolType = schoolType.split(",");
+        FilterArray.push({
+            schoolType: { "$in": schoolType }
+        })
+    }
+    if (classification) {
+        classification = classification.split(",");
+        FilterArray.push({
+            classification: { "$in": classification }
+        })
+    }
     School.find({
-        "$or": [
-            { schoolName: { "$regex": `${query}`, "$options": "i" } },
-            {
-                "contactDetails.address": { "$regex": `${query}`, "$options": "i" }
-            }
-        ]
-    }).limit(limit ? limit : 40).then((docs) => {
-        return SendResponse(res, 200, docs, "OK!", docs.length > 0 ? false : true)
-    })
+        "$or": FilterArray
+    }, "-queries")
+        .skip(skip ? parseInt(skip) : 0)
+        .limit(limit ? parseInt(limit) : 40)
+        .then((docs) => {
+            return SendResponse(res, 200, docs, "OK!", docs.length > 0 ? false : true)
+        })
 };
 
 
