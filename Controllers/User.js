@@ -81,7 +81,7 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
     User.findOne({ email }).then(async (doc) => {
         if (doc) {
-            await bcrypt.compare(password, doc.password, async(err, isMatch) => {
+            await bcrypt.compare(password, doc.password, async (err, isMatch) => {
                 if (isMatch) {
                     const token = await jwtGenerator(doc._id);
                     doc.password = undefined;
@@ -98,9 +98,21 @@ const loginUser = async (req, res) => {
     })
 };
 
+const updateLastViewedInquiry = (req, res) => {
+    const { uid, time } = req.params;
+    User.updateOne({ _id: uid }, {
+        lastViewedInquiry: time
+    }, (err, raw) => {
+        if (err)
+            return SendResponse(res, 400, {}, "Failed to update", true);
+        return SendResponse(res, 200, raw, "updated")
+    })
+}
+
 module.exports = {
     registerUser,
     checkUser,
     checkToken,
-    loginUser
+    loginUser,
+    updateLastViewedInquiry
 }

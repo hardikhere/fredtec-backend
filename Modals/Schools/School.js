@@ -10,6 +10,21 @@ const { PRE_COLLEGE, DAY, BOARDING, PLAY } = SchoolTypes;
 const { CBSE, ICGSE, ICSE, RBSE } = BoardTypes;
 const { BOYS, GIRLS, COED } = ClassificationTypes
 
+const announcementsSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    imageUrls: [String],
+    hasExpired: Boolean,
+    grade: String,
+    announcedBy: String
+}, { timestamps: true });
+
 const SchoolSchema = new mongoose.Schema({
     schoolName: {
         type: String,
@@ -72,7 +87,8 @@ const SchoolSchema = new mongoose.Schema({
     reviews: [ReviewSchema],
     credits: {
         type: Number,
-    }
+    },
+    announcements: [announcementsSchema]
 
 }, { timestamps: true });
 

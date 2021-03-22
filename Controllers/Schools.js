@@ -3,7 +3,6 @@ const { generateSchoolId } = require("../utils/common");
 const SendResponse = require("../utils/Responses");
 
 
-
 const createSchool = async (req, res) => {
     const { schoolDetails } = req.body;
     schoolDetails.schoolId = generateSchoolId(schoolDetails.schoolName);
@@ -167,6 +166,21 @@ const addReview = async (req, res) => {
             return SendResponse(res, 404, {}, "School Not Found", true);
         return SendResponse(res, 400, {}, err.message, err);
     })
+};
+
+const createdAnnouncements = (req, res) => {
+    const { schoolId } = req.params;
+    const { announcement } = req.body;
+    School.updateOne({ schoolId }, {
+        $push: {
+            announcements: announcement
+        }
+    }, (err, raw) => {
+        if (err)
+            return SendResponse(res, 400, {}, "Failed to create announcement", true);
+        return SendResponse(res, 200, raw, "Announcement Created!")
+    })
+
 }
 
 module.exports = {
@@ -177,5 +191,6 @@ module.exports = {
     getSchool,
     searchSchools,
     addQuery,
-    addReview
+    addReview,
+    createdAnnouncements
 }

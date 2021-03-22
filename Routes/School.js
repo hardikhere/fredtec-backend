@@ -7,7 +7,8 @@ const { createSchool,
     getSchool,
     searchSchools,
     addQuery,
-    addReview } = require("../Controllers/Schools");
+    addReview,
+    createdAnnouncements } = require("../Controllers/Schools");
 const SendResponse = require("../utils/Responses");
 const router = express.Router();
 
@@ -30,5 +31,6 @@ router.post("/query/:schoolId", (req, res) => basicWrapper(req, res, addQuery));
 
 router.post("/review/:schoolId/:userId", addReview);
 router.post("/upload-image", uploadImage);
+router.post("/create-announcement/:schoolId", (req, res) => basicWrapper(req, res, createdAnnouncements))
 
 module.exports = router;

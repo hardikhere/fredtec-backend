@@ -27,7 +27,15 @@ const QuerySchema = new mongoose.Schema({
     grade: {// need to improve
         type: String
     },
-    academicRecords: [String]// image urls (aws s3)
-});
+    academicRecords: [String],// image urls (aws s3)
+    hasContacted: {
+        type: Boolean,
+        default: false
+    },
+    readed: {
+        type: Boolean,
+        default: false
+    }
+}, { timestamps: true });
 
 module.exports = QuerySchema;
