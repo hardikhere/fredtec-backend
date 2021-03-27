@@ -1,5 +1,6 @@
 const express = require("express");
 const { uploadImage } = require("../Controllers/Admin");
+const { getLatestFeeds } = require("../Controllers/Feeds");
 const { createSchool,
     updateSchool,
     deleteSchool,
@@ -33,4 +34,5 @@ router.post("/review/:schoolId/:userId", addReview);
 router.post("/upload-image", uploadImage);
 router.post("/create-announcement/:schoolId", (req, res) => basicWrapper(req, res, createdAnnouncements))
 
+router.get("/feeds", (req, res) => basicWrapper(req, res, getLatestFeeds));
 module.exports = router;

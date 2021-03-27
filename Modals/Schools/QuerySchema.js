@@ -35,6 +35,14 @@ const QuerySchema = new mongoose.Schema({
     readed: {
         type: Boolean,
         default: false
+    },
+    isUnlocked: {
+        type: Boolean,
+        default: false
+    },
+    creditsRequired: {
+        type: Number,
+        default: 100
     }
 }, { timestamps: true });
 

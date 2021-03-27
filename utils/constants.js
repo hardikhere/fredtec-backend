@@ -31,9 +31,14 @@ AWSconfig.s3 = new AWS.S3({
     secretAccessKey: IAM_USER_SECRET
 });
 
+const FREE_CREDITS = {
+    firstTime: 200
+}
+
 module.exports = {
     SchoolTypes,
     BoardTypes,
     ClassificationTypes,
-    AWSconfig
+    AWSconfig,
+    FREE_CREDITS
 }

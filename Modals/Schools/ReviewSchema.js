@@ -20,7 +20,7 @@ const ReviewSchema = new mongoose.Schema({
         type: String,
         maxlength: 40,
     },
-    body: {
+    content: {
         type: String,
         maxlength: 1000
     }

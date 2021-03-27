@@ -1,5 +1,6 @@
 const School = require("../Modals/Schools/School");
 const { generateSchoolId } = require("../utils/common");
+const { FREE_CREDITS } = require("../utils/constants");
 const SendResponse = require("../utils/Responses");
 
 
@@ -8,10 +9,20 @@ const createSchool = async (req, res) => {
     schoolDetails.schoolId = generateSchoolId(schoolDetails.schoolName);
     const newSchool = new School(schoolDetails);
     newSchool.save().then((doc) => {
-        if (doc)
-            return SendResponse(res, 200, doc, "School Created Successfully!");
-        else
-            return SendResponse(res, 400, {}, "Not Able To Save School Profile!", true);
+        updateCreditsInternally(schoolDetails.schoolId, FREE_CREDITS.firstTime)
+            .then(isDone => {
+                if (isDone) {
+                    doc.creditsAdded = FREE_CREDITS.firstTime;
+                    if (doc)
+                        return SendResponse(res, 200, doc, "School Created Successfully And Free Credits Added!");
+                    else
+                        return SendResponse(res, 400, {}, "Not Able To Save School Profile!", true);
+                }
+                if (doc)
+                    return SendResponse(res, 200, doc, "School Created Successfully!");
+                else
+                    return SendResponse(res, 400, {}, "Not Able To Save School Profile!", true);
+            })
 
     });
 };
@@ -181,6 +192,32 @@ const createdAnnouncements = (req, res) => {
         return SendResponse(res, 200, raw, "Announcement Created!")
     })
 
+};
+
+const updateCredit = async (req, res) => {
+    const { credits, codeWord } = req.body;
+    const { schoolId } = req.param;
+    School.updateOne({ schoolId }, {
+        "$inc": {
+            "credits": credits
+        }
+    }, (err, raw) => {
+        if (err)
+            return SendResponse(res, 400, {}, "Failed to update credit points!", true);
+        return SendResponse(res, 200, raw, "Credit Points Added Successfully!")
+    })
+};
+
+const updateCreditsInternally = async (sid, credits) => {
+    School.updateOne({ schoolId: sid }, {
+        "$inc": {
+            "credits": credits
+        }
+    }, (err, raw) => {
+        if (err)
+            return false
+        return true;
+    })
 }
 
 module.exports = {
@@ -192,5 +229,7 @@ module.exports = {
     searchSchools,
     addQuery,
     addReview,
-    createdAnnouncements
+    createdAnnouncements,
+    updateCredit,
+    updateCreditsInternally
 }

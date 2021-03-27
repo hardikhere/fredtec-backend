@@ -25,6 +25,24 @@ const announcementsSchema = new mongoose.Schema({
     announcedBy: String
 }, { timestamps: true });
 
+const academicsScoreSchema = new mongoose.Schema({
+    grade: {
+        type: Number,
+        enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    },
+    isBoard: Boolean,
+    highestPercentage: {
+        type: Number,
+        max: 100
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    remarks: String,
+    imageUrls: [String]
+})
+
 const SchoolSchema = new mongoose.Schema({
     schoolName: {
         type: String,
@@ -88,7 +106,17 @@ const SchoolSchema = new mongoose.Schema({
     credits: {
         type: Number,
     },
-    announcements: [announcementsSchema]
+    announcements: [announcementsSchema],
+    classAcademicsScore: [academicsScoreSchema],
+    boardScore: {
+        type: Number
+    },
+    NonBoardScore: {
+        type: Number
+    },
+    totalAcademicsScore: {
+        type: Number
+    },
 
 }, { timestamps: true });
 

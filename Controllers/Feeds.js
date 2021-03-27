@@ -24,10 +24,10 @@ const deleteFeed = (req, res) => {
 
 const getSchoolFeeds = (req, res) => {
     const { sid } = req.params;
-    Feeds.find({ sid }).sort({"createdAt": -1})
-    .then((docs) => {
-        return SendResponse(res, 200, docs);
-    })
+    Feeds.find({ sid }).sort({ "createdAt": -1 })
+        .then((docs) => {
+            return SendResponse(res, 200, docs);
+        })
 }
 
 const updateFeed = (req, res) => {
@@ -41,9 +41,31 @@ const updateFeed = (req, res) => {
 
 }
 
+const getLatestFeeds = async (req, res) => {
+    let { skip, limit } = req.query;
+    skip = parseInt(skip)
+    limit = parseInt(limit)
+    Feeds.find().sort({ createdAt: 1 })
+        .skip(skip ? skip : 0)
+        .limit(limit ? limit : 40)
+        .then((docs) => {
+            var nextUrl;
+            if (skip && limit) {
+                nextUrl = req.protocol + '://' + req.get('host') + req.originalUrl +
+                    `?skip=${skip + limit}&limit=${limit}`
+            }
+            else nextUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+            return SendResponse(res, 200, {
+                docs,
+                nextUrl
+            }, "Fetched");
+        })
+}
+
 module.exports = {
     addNewFeed,
     deleteFeed,
     getSchoolFeeds,
-    updateFeed
+    updateFeed,
+    getLatestFeeds
 }
