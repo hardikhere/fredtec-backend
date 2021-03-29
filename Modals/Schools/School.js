@@ -101,7 +101,10 @@ const SchoolSchema = new mongoose.Schema({
     infraDetails: InfraSchema,
     otherInfo: OtherInfoSchema,
     travelInfo: travelSchema,
-    queries: [QuerySchema],
+    queries: [{
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "Query"
+    }],
     reviews: [ReviewSchema],
     credits: {
         type: Number,
@@ -119,6 +122,8 @@ const SchoolSchema = new mongoose.Schema({
     },
 
 }, { timestamps: true });
+
+
 
 const School = mongoose.model("School", SchoolSchema);
 module.exports = School;

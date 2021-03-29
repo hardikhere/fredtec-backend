@@ -46,4 +46,5 @@ const QuerySchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-module.exports = QuerySchema;
+const Query = mongoose.model("Query", QuerySchema);
+module.exports = Query;

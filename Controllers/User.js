@@ -107,7 +107,7 @@ const updateLastViewedInquiry = (req, res) => {
             return SendResponse(res, 400, {}, "Failed to update", true);
         return SendResponse(res, 200, raw, "updated")
     })
-}
+};
 
 module.exports = {
     registerUser,

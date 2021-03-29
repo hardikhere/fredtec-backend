@@ -9,7 +9,10 @@ const { createSchool,
     searchSchools,
     addQuery,
     addReview,
-    createdAnnouncements } = require("../Controllers/Schools");
+    createdAnnouncements,
+    getQueryBySchoolId,
+    unlockQuery,
+    markContacted } = require("../Controllers/Schools");
 const SendResponse = require("../utils/Responses");
 const router = express.Router();
 
@@ -29,7 +32,10 @@ router.get("/schools", getSchoolProfiles);
 router.get("/school/:schoolId", getSchool);
 router.get("/search", (req, res) => basicWrapper(req, res, searchSchools));
 router.post("/query/:schoolId", (req, res) => basicWrapper(req, res, addQuery));
+router.get("/school/:sid/query/:qid/unlock", (req, res) => basicWrapper(req, res, unlockQuery));
+router.get("/query/:qid/contacted/:flag", (req, res) => basicWrapper(req, res, markContacted));
 
+router.get("/school/queries/:schoolId", (req, res) => basicWrapper(req, res, getQueryBySchoolId));
 router.post("/review/:schoolId/:userId", addReview);
 router.post("/upload-image", uploadImage);
 router.post("/create-announcement/:schoolId", (req, res) => basicWrapper(req, res, createdAnnouncements))

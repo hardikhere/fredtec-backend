@@ -1,6 +1,7 @@
+const Query = require("../Modals/Schools/QuerySchema");
 const School = require("../Modals/Schools/School");
 const { generateSchoolId } = require("../utils/common");
-const { FREE_CREDITS } = require("../utils/constants");
+const { FREE_CREDITS, QueryUnlockCredits } = require("../utils/constants");
 const SendResponse = require("../utils/Responses");
 
 
@@ -147,20 +148,33 @@ const searchSchools = async (req, res) => {
 const addQuery = async (req, res) => {
     const { schoolId } = req.params;
     const { query } = req.body;
-    School.findOneAndUpdate({ schoolId }, {
-        $push: {
-            queries: query
-        }
-    }, (err, doc) => {
-        if (err)
-            return SendResponse(res, 500, err, "Error Occured", true);
-        if (doc)
-            return SendResponse(res, 200, doc, "OK!");
-        if (!doc)
-            return SendResponse(res, 404, {}, "School Not Found", true);
-        return SendResponse(res, 400, {}, err.message, err);
+    const newQuery = new Query(query);
+    newQuery.save().then((doc) => {
+        School.findOneAndUpdate({ schoolId }, {
+            $push: {
+                queries: doc._id
+            }
+        }, (err, doc) => {
+            if (err)
+                return SendResponse(res, 500, err, "Error Occured", true);
+            if (doc)
+                return SendResponse(res, 200, doc, "OK!");
+            if (!doc)
+                return SendResponse(res, 404, {}, "School Not Found", true);
+            return SendResponse(res, 400, {}, err.message, err);
+        })
     })
 };
+
+const getQueryBySchoolId = async (req, res) => {
+    School.findOne({ schoolId: req.params.schoolId }, "schoolName schoolId")
+        .populate("queries")
+        .then((doc) => {
+            if (!doc)
+                return SendResponse(res, 404, {}, "School Not Found", true);
+            return SendResponse(res, 200, doc)
+        })
+}
 
 const addReview = async (req, res) => {
     const { schoolId, userId } = req.params;
@@ -218,7 +232,48 @@ const updateCreditsInternally = async (sid, credits) => {
             return false
         return true;
     })
+};
+
+const checkIfQuerylocked = async (qid) => {
+    Query.findById({ _id: qid }, (err, doc) => {
+        if (doc.isUnlocked) return true;
+        return false
+    })
 }
+
+const unlockQuery = async (req, res) => {
+    const { qid, sid } = req.params;
+    checkIfQuerylocked(qid).then(check => {
+        if (check) {
+            updateCreditsInternally(sid, -QueryUnlockCredits).then(status => {
+                Query.updateOne({ _id: qid }, {
+                    $set: {
+                        "isUnlocked": true
+                    }
+                }, (err, raw) => {
+                    if (err)
+                        return SendResponse(res, 400, {}, "Failed to Unlock Query", true);
+                    return SendResponse(res, 200, raw, "Unlocked Successfully!")
+                })
+            })
+        }
+        else return SendResponse(res, 400, {}, "Already Unlocked", true);
+    })
+};
+
+const markContacted = async (req, res) => {
+    const { qid, flag } = req.params;
+    const change = flag == 1 ? true : false;
+    Query.updateOne({ _id: qid }, {
+        $set: {
+            "hasContacted": change
+        }
+    }, (err, raw) => {
+        if (err)
+            return SendResponse(res, 400, {}, "Failed to Marked Contacted", true);
+        return SendResponse(res, 200, raw, "Marked Contacted Successfully!")
+    })
+};
 
 module.exports = {
     createSchool,
@@ -228,8 +283,11 @@ module.exports = {
     getSchool,
     searchSchools,
     addQuery,
+    getQueryBySchoolId,
     addReview,
     createdAnnouncements,
     updateCredit,
-    updateCreditsInternally
+    updateCreditsInternally,
+    unlockQuery,
+    markContacted
 }

@@ -33,7 +33,10 @@ const UserSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    lastViewedInquiry: String,
+    lastViewedInquiry: {
+        type: String,
+        default: Date.now()
+    },
 
 }, { timestamps: true });
 

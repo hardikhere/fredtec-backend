@@ -33,12 +33,15 @@ AWSconfig.s3 = new AWS.S3({
 
 const FREE_CREDITS = {
     firstTime: 200
-}
+};
+
+const QueryUnlockCredits = 100;
 
 module.exports = {
     SchoolTypes,
     BoardTypes,
     ClassificationTypes,
     AWSconfig,
-    FREE_CREDITS
+    FREE_CREDITS,
+    QueryUnlockCredits
 }
