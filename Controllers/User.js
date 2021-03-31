@@ -6,12 +6,13 @@ const { jwtGenerator } = require("../utils/common");
 
 const checkUser = async (res, decoded) => {
     const { id } = decoded;
-    await Users.findOne({ uid: id }, (err, user) => {
+    return await User.findOne({ _id: id },"-password", (err, user) => {
+        if (user) return user;
         if (err)
             return SendResponse(res, 500, false, err.message, err)
         if (!user)
             return SendResponse(res, 400, false, "User not registered", true);
-        return true;
+
     });
 }
 
@@ -25,19 +26,22 @@ let checkToken = (req, res, next) => {
         token = token.slice(7, token.length);
 
     if (token) {
-        jwt.verify(token, process.env.JWTSECRET, (err, decoded) => {
+        jwt.verify(token, process.env.JWTSECRET, async (err, decoded) => {
             if (err)
                 return SendResponse(res, 400, {}, "Invalid Token!", err);
             else {
                 req.decoded = decoded;
+                console.log("decoded is ", decoded)
                 checkUser(res, decoded)
-                    .then((res) => {
-                        if (res === true)
+                    .then((checkUser) => {
+                        console.log("check user is ", checkUser)
+                        if (checkUser)
                             next();
-                        else return res;
+                        else return SendResponse(res, 500, {}, "User Not Available", true);
                     })
                     .catch((error) => {
-                        return SendResponse(res, 500, false, "Token Verification Failed", true);
+                        console.log(error.message, error)
+                        return SendResponse(res, 500, error, "Token Verification Failed", true);
                     });
             }
         });
@@ -109,10 +113,15 @@ const updateLastViewedInquiry = (req, res) => {
     })
 };
 
+const getUserByToken = async (req, res) => {
+    return SendResponse(res, 200, await checkUser(res, req.decoded));
+}
+
 module.exports = {
     registerUser,
     checkUser,
     checkToken,
     loginUser,
-    updateLastViewedInquiry
+    updateLastViewedInquiry,
+    getUserByToken
 }

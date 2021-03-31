@@ -1,4 +1,4 @@
-const { BoardTypes, ClassificationTypes, SchoolTypes } = require("../../utils/constants");
+const { BoardTypes, ClassificationTypes, SchoolTypes, FREE_CREDITS } = require("../../utils/constants");
 const ContactSchema = require("./ContactSchema");
 const FeeSchema = require("./FeeSchema");
 const { OtherInfoSchema, travelSchema } = require("./OtherInfoSchema");
@@ -108,6 +108,7 @@ const SchoolSchema = new mongoose.Schema({
     reviews: [ReviewSchema],
     credits: {
         type: Number,
+        default: FREE_CREDITS.firstTime
     },
     announcements: [announcementsSchema],
     classAcademicsScore: [academicsScoreSchema],

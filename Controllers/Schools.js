@@ -1,28 +1,32 @@
 const Query = require("../Modals/Schools/QuerySchema");
 const School = require("../Modals/Schools/School");
+const User = require("../Modals/User/UserSchema");
 const { generateSchoolId } = require("../utils/common");
 const { FREE_CREDITS, QueryUnlockCredits } = require("../utils/constants");
 const SendResponse = require("../utils/Responses");
 
 
 const createSchool = async (req, res) => {
-    const { schoolDetails } = req.body;
+    const { schoolDetails, userDetails } = req.body;
+    if (!userDetails) return SendResponse(res, 400, {}, "Userdetails required", true);
     schoolDetails.schoolId = generateSchoolId(schoolDetails.schoolName);
     const newSchool = new School(schoolDetails);
     newSchool.save().then((doc) => {
         updateCreditsInternally(schoolDetails.schoolId, FREE_CREDITS.firstTime)
             .then(isDone => {
                 if (isDone) {
-                    doc.creditsAdded = FREE_CREDITS.firstTime;
-                    if (doc)
-                        return SendResponse(res, 200, doc, "School Created Successfully And Free Credits Added!");
-                    else
-                        return SendResponse(res, 400, {}, "Not Able To Save School Profile!", true);
+                    User.updateOne({ _id: userDetails._id }, {
+                        $set: {
+                            "adminOf": schoolDetails.schoolId,
+                            "isSchoolAdmin": true
+                        }
+                    }, (err, raw) => {
+                        if (!err)
+                            return SendResponse(res, 200, doc, "School Created Successfully!");
+                        else
+                            return SendResponse(res, 400, {}, "Not Able To Save School Profile!", true);
+                    })
                 }
-                if (doc)
-                    return SendResponse(res, 200, doc, "School Created Successfully!");
-                else
-                    return SendResponse(res, 400, {}, "Not Able To Save School Profile!", true);
             })
 
     });
@@ -223,7 +227,7 @@ const updateCredit = async (req, res) => {
 };
 
 const updateCreditsInternally = async (sid, credits) => {
-    School.updateOne({ schoolId: sid }, {
+    return await School.updateOne({ schoolId: sid }, {
         "$inc": {
             "credits": credits
         }
@@ -236,7 +240,7 @@ const updateCreditsInternally = async (sid, credits) => {
 
 const checkIfQuerylocked = async (qid) => {
     Query.findById({ _id: qid }, (err, doc) => {
-        if (doc.isUnlocked) return true;
+        if (doc && doc.isUnlocked) return true;
         return false
     })
 }
@@ -244,7 +248,7 @@ const checkIfQuerylocked = async (qid) => {
 const unlockQuery = async (req, res) => {
     const { qid, sid } = req.params;
     checkIfQuerylocked(qid).then(check => {
-        if (check) {
+        if (!check) {
             updateCreditsInternally(sid, -QueryUnlockCredits).then(status => {
                 Query.updateOne({ _id: qid }, {
                     $set: {
