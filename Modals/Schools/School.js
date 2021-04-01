@@ -51,7 +51,7 @@ const SchoolSchema = new mongoose.Schema({
     },
     admin: {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: "User"
+        ref: "SchoolAdmins"
     },
     email: {
         type: String,
@@ -115,7 +115,7 @@ const SchoolSchema = new mongoose.Schema({
     boardScore: {
         type: Number
     },
-    NonBoardScore: {
+    nonBoardScore: {
         type: Number
     },
     totalAcademicsScore: {

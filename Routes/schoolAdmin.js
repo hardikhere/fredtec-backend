@@ -1,0 +1,16 @@
+const express = require("express");
+const { registerSchoolAdmin, loginSchoolAdmin } = require("../Controllers/schoolAdmin");
+const router = express.Router();
+
+const basicWrapper = async (req, res, controller) => {
+    try {
+        return await controller(req, res);
+    } catch (err) {
+        return SendResponse(res, 500, {}, "Internal Server Error!", err.message);
+    }
+};
+
+router.post("/schoolAdmin/register", (req, res) => basicWrapper(req, res, registerSchoolAdmin));
+router.post("/schoolAdmin/login", (req, res) => basicWrapper(req, res, loginSchoolAdmin));
+
+module.exports = router;

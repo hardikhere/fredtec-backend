@@ -6,6 +6,7 @@ const cors = require("cors");
 require("dotenv").config();
 const app = express();
 const SchoolRoutes = require("./Routes/School");
+const SchoolAdminRoutes = require("./Routes/schoolAdmin")
 const UserRoutes = require("./Routes/User");
 const SendResponse = require("./utils/Responses");
 const helmet = require("helmet");
@@ -39,6 +40,7 @@ app.use(morgan(process.env.NODE_ENV || "dev"));
 const BaseAPI = "/api/v1";
 app.use(BaseAPI, SchoolRoutes);
 app.use(BaseAPI, UserRoutes);
+app.use(BaseAPI, SchoolAdminRoutes);
 
 // health check API
 app.use("/health-check", (req, res) => {

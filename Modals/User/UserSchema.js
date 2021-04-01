@@ -1,16 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-//we are using _id for users
 const UserSchema = new mongoose.Schema({
-    isSchoolAdmin: {
-        type: Boolean,
-        default: false
-    },
-    adminOf: {
-        type: String,
-        ref: "School"
-    },
     email: {
         type: String,
         maxlength: 50,
@@ -32,11 +23,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    },
-    lastViewedInquiry: {
-        type: String,
-        default: Date.now()
-    },
+    }
 
 }, { timestamps: true });
 

@@ -1,6 +1,6 @@
 const Query = require("../Modals/Schools/QuerySchema");
 const School = require("../Modals/Schools/School");
-const User = require("../Modals/User/UserSchema");
+const SchoolAdmins = require("../Modals/Schools/SchoolAdmin");
 const { generateSchoolId } = require("../utils/common");
 const { FREE_CREDITS, QueryUnlockCredits } = require("../utils/constants");
 const SendResponse = require("../utils/Responses");
@@ -15,10 +15,9 @@ const createSchool = async (req, res) => {
         updateCreditsInternally(schoolDetails.schoolId, FREE_CREDITS.firstTime)
             .then(isDone => {
                 if (isDone) {
-                    User.updateOne({ _id: userDetails._id }, {
+                    SchoolAdmins.updateOne({ _id: userDetails._id }, {
                         $set: {
-                            "adminOf": schoolDetails.schoolId,
-                            "isSchoolAdmin": true
+                            "schoolId": schoolDetails.schoolId
                         }
                     }, (err, raw) => {
                         if (!err)
