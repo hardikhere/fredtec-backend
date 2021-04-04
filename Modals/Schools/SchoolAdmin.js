@@ -24,7 +24,7 @@ const schoolAdminSchema = new mongoose.Schema({
         trim: true
     },
     schoolId: {
-        type: mongoose.SchemaTypes.ObjectId
+        type: String
     }
 
 }, { timestamps: true });

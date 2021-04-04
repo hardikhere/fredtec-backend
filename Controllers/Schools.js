@@ -20,10 +20,11 @@ const createSchool = async (req, res) => {
                             "schoolId": schoolDetails.schoolId
                         }
                     }, (err, raw) => {
+                        console.log(err)
                         if (!err)
                             return SendResponse(res, 200, doc, "School Created Successfully!");
                         else
-                            return SendResponse(res, 400, {}, "Not Able To Save School Profile!", true);
+                            return SendResponse(res, 400, err, "Not Able To Save School Profile!", true);
                     })
                 }
             })

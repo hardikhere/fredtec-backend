@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { jwtGenerator } = require("../utils/common");
 
-const checkUser = async (res, decoded) => {
+const checkAdmin = async (res, decoded) => {
     const { id } = decoded;
     return await SchoolAdmins.findOne({ _id: id }, "-password", (err, user) => {
         if (user) return user;
@@ -32,7 +32,7 @@ let checkSchoolAdminToken = (req, res, next) => {
             else {
                 req.decoded = decoded;
                 console.log("decoded is ", decoded)
-                checkUser(res, decoded)
+                checkAdmin(res, decoded)
                     .then((checkUser) => {
                         console.log("check user is ", checkUser)
                         if (checkUser)
@@ -101,9 +101,14 @@ const loginSchoolAdmin = async (req, res) => {
     })
 };
 
+const getAdminByToken = async (req, res) => {
+    return SendResponse(res, 200, await checkAdmin(res, req.decoded));
+}
+
 
 module.exports = {
     loginSchoolAdmin,
     registerSchoolAdmin,
-    checkSchoolAdminToken
+    checkSchoolAdminToken,
+    getAdminByToken
 }
