@@ -36,6 +36,9 @@ schoolAdminSchema.virtual("schoolDetails", {
     justOne: false
 });
 
+schoolAdminSchema.set('toObject', { virtuals: true });
+schoolAdminSchema.set('toJSON', { virtuals: true });
+
 
 const SchoolAdmins = mongoose.model("SchoolAdmins", schoolAdminSchema);
 module.exports = SchoolAdmins;

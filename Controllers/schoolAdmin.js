@@ -6,14 +6,14 @@ const { jwtGenerator } = require("../utils/common");
 
 const checkAdmin = async (res, decoded) => {
     const { id } = decoded;
-    return await SchoolAdmins.findOne({ _id: id }, "-password", (err, user) => {
-        if (user) return user;
-        if (err)
-            return SendResponse(res, 500, false, err.message, err)
-        if (!user)
-            return SendResponse(res, 400, false, "User not registered", true);
-
-    });
+    const user = await SchoolAdmins.findOne({ _id: id }, "-password")
+        .populate({
+            path: "schoolDetails",
+            select: "-_id"
+        })
+        .exec();
+    console.log(user);
+    return user;
 }
 
 let checkSchoolAdminToken = (req, res, next) => {
@@ -31,18 +31,8 @@ let checkSchoolAdminToken = (req, res, next) => {
                 return SendResponse(res, 400, {}, "Invalid Token!", err);
             else {
                 req.decoded = decoded;
-                console.log("decoded is ", decoded)
-                checkAdmin(res, decoded)
-                    .then((checkUser) => {
-                        console.log("check user is ", checkUser)
-                        if (checkUser)
-                            next();
-                        else return SendResponse(res, 500, {}, "User Not Available", true);
-                    })
-                    .catch((error) => {
-                        console.log(error.message, error)
-                        return SendResponse(res, 500, error, "Token Verification Failed", true);
-                    });
+                console.log("decoded is ", decoded);
+                next();
             }
         });
     }
@@ -101,8 +91,15 @@ const loginSchoolAdmin = async (req, res) => {
     })
 };
 
-const getAdminByToken = async (req, res) => {
-    return SendResponse(res, 200, await checkAdmin(res, req.decoded));
+const getAdminByToken = async (req, res, user) => {
+    const { id } = req.decoded;
+    SchoolAdmins.findOne({ _id: id }, "-password")
+        .populate("schoolDetails")
+        .exec((err, user) => {
+            if (err)
+                return SendResponse(res, 500, err, "Server Error", true);
+            return SendResponse(res, 200, user)
+        });
 }
 
 
