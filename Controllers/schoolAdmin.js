@@ -98,7 +98,9 @@ const getAdminByToken = async (req, res, user) => {
         .exec((err, user) => {
             if (err)
                 return SendResponse(res, 500, err, "Server Error", true);
-            return SendResponse(res, 200, user)
+            var toSend = user.toObject();
+            toSend.schoolDetails = user.schoolDetails[0]
+            return SendResponse(res, 200, toSend)
         });
 }
 
