@@ -1,7 +1,7 @@
 const express = require("express");
 const { addNewFeed, updateFeed, getSchoolFeeds, deleteFeed } = require("../Controllers/Feeds");
 const router = express.Router();
-const { registerUser, loginUser, updateLastViewedInquiry, getUserByToken, checkToken } = require("../Controllers/User");
+const { registerUser, loginUser, getUserByToken, checkToken } = require("../Controllers/User");
 const basicWrapper = async (req, res, controller) => {
     try {
         return await controller(req, res);
@@ -16,5 +16,5 @@ router.post("/new-feed", addNewFeed);
 router.delete("/delete-feed/:_id", deleteFeed);
 router.put("/update-feed", updateFeed);
 router.get("/feeds/school/:sid", getSchoolFeeds);
-router.get("/inquiryReaded/:uid/:time", updateLastViewedInquiry)
+
 module.exports = router;

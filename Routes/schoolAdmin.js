@@ -1,5 +1,9 @@
 const express = require("express");
-const { registerSchoolAdmin, loginSchoolAdmin, getAdminByToken, checkSchoolAdminToken } = require("../Controllers/schoolAdmin");
+const { registerSchoolAdmin,
+    loginSchoolAdmin,
+    getAdminByToken,
+    checkSchoolAdminToken,
+    updateLastViewedInquiry } = require("../Controllers/schoolAdmin");
 const router = express.Router();
 
 const basicWrapper = async (req, res, controller) => {
@@ -10,6 +14,7 @@ const basicWrapper = async (req, res, controller) => {
     }
 };
 
+router.put("/lastquery-view/:id/:time", (req, res) => basicWrapper(req, res, updateLastViewedInquiry));
 router.post("/schoolAdmin/register", (req, res) => basicWrapper(req, res, registerSchoolAdmin));
 router.post("/schoolAdmin/login", (req, res) => basicWrapper(req, res, loginSchoolAdmin));
 router.get("/schoolAdmin", checkSchoolAdminToken, (req, res) => basicWrapper(req, res, getAdminByToken))

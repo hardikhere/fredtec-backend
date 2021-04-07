@@ -25,6 +25,10 @@ const schoolAdminSchema = new mongoose.Schema({
     },
     schoolId: {
         type: String
+    },
+    lastViewedInquiry: {
+        type: String,
+        default: Date.now()
     }
 
 }, { timestamps: true });

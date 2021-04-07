@@ -12,7 +12,8 @@ const { createSchool,
     createdAnnouncements,
     getQueryBySchoolId,
     unlockQuery,
-    markContacted } = require("../Controllers/Schools");
+    markContacted, 
+    markQueryReaded} = require("../Controllers/Schools");
 const SendResponse = require("../utils/Responses");
 const router = express.Router();
 
@@ -33,7 +34,10 @@ router.get("/school/:schoolId", getSchool);
 router.get("/search", (req, res) => basicWrapper(req, res, searchSchools));
 router.post("/query/:schoolId", (req, res) => basicWrapper(req, res, addQuery));
 router.get("/school/:sid/query/:qid/unlock", (req, res) => basicWrapper(req, res, unlockQuery));
-router.get("/query/:qid/contacted/:flag", (req, res) => basicWrapper(req, res, markContacted));
+
+router.put("/query/:qid/contacted", (req, res) => basicWrapper(req, res, markContacted));
+router.put("/query/:qid/readed", (req, res) => basicWrapper(req, res, markQueryReaded));
+
 
 router.get("/school/queries/:schoolId", (req, res) => basicWrapper(req, res, getQueryBySchoolId));
 router.post("/review/:schoolId/:userId", addReview);

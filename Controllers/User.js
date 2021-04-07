@@ -6,7 +6,7 @@ const { jwtGenerator } = require("../utils/common");
 
 const checkUser = async (res, decoded) => {
     const { id } = decoded;
-    return await User.findOne({ _id: id },"-password", (err, user) => {
+    return await User.findOne({ _id: id }, "-password", (err, user) => {
         if (user) return user;
         if (err)
             return SendResponse(res, 500, false, err.message, err)
@@ -102,16 +102,7 @@ const loginUser = async (req, res) => {
     })
 };
 
-const updateLastViewedInquiry = (req, res) => {
-    const { uid, time } = req.params;
-    User.updateOne({ _id: uid }, {
-        lastViewedInquiry: time
-    }, (err, raw) => {
-        if (err)
-            return SendResponse(res, 400, {}, "Failed to update", true);
-        return SendResponse(res, 200, raw, "updated")
-    })
-};
+
 
 const getUserByToken = async (req, res) => {
     return SendResponse(res, 200, await checkUser(res, req.decoded));
@@ -122,6 +113,5 @@ module.exports = {
     checkUser,
     checkToken,
     loginUser,
-    updateLastViewedInquiry,
     getUserByToken
 }

@@ -102,12 +102,26 @@ const getAdminByToken = async (req, res, user) => {
             toSend.schoolDetails = user.schoolDetails[0]
             return SendResponse(res, 200, toSend)
         });
-}
+};
+
+const updateLastViewedInquiry = (req, res) => {
+    const { id, time } = req.params;
+    SchoolAdmins.findOneAndUpdate({ _id: id }, {
+        $set: {
+            lastViewedInquiry: time
+        }
+    }, (err, raw) => {
+        if (err)
+            return SendResponse(res, 400, {}, "Failed to update", true);
+        return SendResponse(res, 200, raw, "updated")
+    })
+};
 
 
 module.exports = {
     loginSchoolAdmin,
     registerSchoolAdmin,
     checkSchoolAdminToken,
-    getAdminByToken
+    getAdminByToken,
+    updateLastViewedInquiry
 }

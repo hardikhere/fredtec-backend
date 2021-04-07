@@ -214,28 +214,36 @@ const createdAnnouncements = (req, res) => {
 
 const updateCredit = async (req, res) => {
     const { credits, codeWord } = req.body;
+    console.log(credits)
     const { schoolId } = req.param;
-    School.updateOne({ schoolId }, {
-        "$inc": {
-            "credits": credits
-        }
-    }, (err, raw) => {
-        if (err)
-            return SendResponse(res, 400, {}, "Failed to update credit points!", true);
-        return SendResponse(res, 200, raw, "Credit Points Added Successfully!")
-    })
+    try {
+        const update = await School.findOneAndUpdate({ schoolId }, {
+            $inc: {
+                "credits": credits
+            }
+        });
+
+        return SendResponse(res, 200, update, "Credit Points Added Successfully!")
+    } catch (err) {
+        return SendResponse(res, 400, err, "Failed to credit points", true);
+
+    }
 };
 
 const updateCreditsInternally = async (sid, credits) => {
-    return await School.updateOne({ schoolId: sid }, {
-        "$inc": {
-            "credits": credits
-        }
-    }, (err, raw) => {
-        if (err)
-            return false
+    try {
+        console.log("-----------------" + credits)
+        const update = await School.findOneAndUpdate({ schoolId: sid }, {
+            $inc: {
+                "credits": credits
+            }
+        });
+        console.log(update)
+        if (update.errors) return false;
         return true;
-    })
+    } catch (exception) {
+        return false;
+    }
 };
 
 const checkIfQuerylocked = async (qid) => {
@@ -266,11 +274,22 @@ const unlockQuery = async (req, res) => {
 };
 
 const markContacted = async (req, res) => {
-    const { qid, flag } = req.params;
-    const change = flag == 1 ? true : false;
+    const { qid } = req.params;
     Query.updateOne({ _id: qid }, {
         $set: {
-            "hasContacted": change
+            "hasContacted": true
+        }
+    }, (err, raw) => {
+        if (err)
+            return SendResponse(res, 400, {}, "Failed to Marked Contacted", true);
+        return SendResponse(res, 200, raw, "Marked Contacted Successfully!")
+    })
+};
+const markQueryReaded = async (req, res) => {
+    const { qid } = req.params;
+    Query.updateOne({ _id: qid }, {
+        $set: {
+            "readed": true
         }
     }, (err, raw) => {
         if (err)
@@ -293,5 +312,6 @@ module.exports = {
     updateCredit,
     updateCreditsInternally,
     unlockQuery,
-    markContacted
+    markContacted,
+    markQueryReaded
 }
