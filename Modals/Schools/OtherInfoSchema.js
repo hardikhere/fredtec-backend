@@ -11,8 +11,8 @@ const OtherInfoSchema = new mongoose.Schema({
         maxlength: 6
     },
     ac: Boolean,
-    gradeFrom: Number,
-    gradeTo: Number,
+    gradeFrom: String,
+    gradeTo: String,
     outdoorSports: [String],
     indoorSports: [String],
     activities: [String],

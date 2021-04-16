@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const InfraSchema = require("./InfraSchema");
 const QuerySchema = require("./QuerySchema");
 const ReviewSchema = require("./ReviewSchema");
+const PillarsSchema = require("./PillarsSchema");
 const { PRE_COLLEGE, DAY, BOARDING, PLAY } = SchoolTypes;
 const { CBSE, ICGSE, ICSE, RBSE } = BoardTypes;
 const { BOYS, GIRLS, COED } = ClassificationTypes
@@ -121,6 +122,7 @@ const SchoolSchema = new mongoose.Schema({
     totalAcademicsScore: {
         type: Number
     },
+    pillars: [PillarsSchema]
 
 }, { timestamps: true });
 
