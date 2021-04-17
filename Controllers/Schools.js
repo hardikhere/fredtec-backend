@@ -37,7 +37,7 @@ const updateSchool = async (req, res) => {
     const { updateDetails } = req.body;
     if (!updateDetails)
         return SendResponse(res, 400, {}, "updateDetails object is required!", true);
-    School.findOneAndUpdate({ schoolId: req.params.schoolId }, updateDetails, (err, doc) => {
+    School.findOneAndUpdate({ schoolId: req.params.schoolId }, updateDetails, { upsert: true }, (err, doc) => {
         if (err)
             return SendResponse(res, 400, {}, "Error Occured", err);
 

@@ -122,7 +122,10 @@ const SchoolSchema = new mongoose.Schema({
     totalAcademicsScore: {
         type: Number
     },
-    pillars: [PillarsSchema]
+    pillars: [PillarsSchema],
+    pinCode: {
+        type: String
+    }
 
 }, { timestamps: true });
 
