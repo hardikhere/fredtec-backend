@@ -125,6 +125,12 @@ const SchoolSchema = new mongoose.Schema({
     pillars: [PillarsSchema],
     pinCode: {
         type: String
+    },
+    longitude: {
+        type: mongoose.SchemaTypes.Decimal128
+    },
+    latitude: {
+        type: mongoose.SchemaTypes.Decimal128
     }
 
 }, { timestamps: true });
