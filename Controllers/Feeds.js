@@ -49,9 +49,14 @@ const getLatestFeeds = async (req, res) => {
         .sort({ createdAt: -1 })
         .skip(skip ? skip : 0)
         .limit(limit ? limit : 40)
-        .populate("schoolDetails")
+        .populate("schoolDetails", "schoolName schoolId logoUrl")
         .exec((err, docs) => {
             var nextUrl;
+            docs = docs.map(doc => {
+                var newDoc = doc.toObject()
+                newDoc.schoolDetails = doc.schoolDetails[0]
+                return newDoc
+            })
             if (skip && limit) {
                 nextUrl = req.protocol + '://' + req.get('host') + req.originalUrl +
                     `?skip=${skip + limit}&limit=${limit}`
