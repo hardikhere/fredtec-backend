@@ -45,10 +45,12 @@ const getLatestFeeds = async (req, res) => {
     let { skip, limit } = req.query;
     skip = parseInt(skip)
     limit = parseInt(limit)
-    Feeds.find().sort({ createdAt: 1 })
+    Feeds.find()
+        .sort({ createdAt: -1 })
         .skip(skip ? skip : 0)
         .limit(limit ? limit : 40)
-        .then((docs) => {
+        .populate("schoolDetails")
+        .exec((err, docs) => {
             var nextUrl;
             if (skip && limit) {
                 nextUrl = req.protocol + '://' + req.get('host') + req.originalUrl +
