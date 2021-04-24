@@ -106,11 +106,13 @@ const searchSchools = async (req, res) => {
         query,
         board,
         classification,
-        fees,
+        feeFrom,
+        feeTo,
         schoolType,
         skip,
         sortBy
     } = req.query;
+    console.log(req.query)
     let FilterArray = [];
 
     if (query) {
@@ -138,6 +140,18 @@ const searchSchools = async (req, res) => {
             classification: { "$in": classification }
         })
     }
+    if (feeFrom && feeTo) {
+        feeForm = parseInt(feeFrom);
+        feeTo = parseInt(feeTo);
+        FilterArray.push({
+            "fees.annualFeeFrom": {
+                $gte: feeFrom,
+            },
+            "fees.annualFeeTo": {
+                $lte: feeTo
+            }
+        })
+    }
     School.find(FilterArray.length > 0 ? {
         "$or": FilterArray
     } : {}, "-queries")
@@ -145,6 +159,8 @@ const searchSchools = async (req, res) => {
         .limit(limit ? parseInt(limit) : 40)
         .then((docs) => {
             return SendResponse(res, 200, docs, "OK!", docs.length > 0 ? false : true)
+        }).catch(err => {
+            console.log(err)
         })
 };
 
