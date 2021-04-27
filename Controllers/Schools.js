@@ -63,11 +63,21 @@ const getSchoolProfiles = async (req, res) => {
 
     const limit = parseInt(req.query.limit) || 20;
     const skip = parseInt(req.query.skip) || 0;
+    var sids = req.query.sids;
+    if (sids) {
+        if (sids.includes(","))
+            sids = sids.split(",");
+        else sids = [sids]
+    }
     if (limit > 20) {
         return SendResponse(res, 400, {}, "Maximum value of limit is 20", true);
     }
     try {
-        School.find({}, "-createdAt -updatedAt -__v -_id")
+        School.find(sids ? {
+            "schoolId": {
+                $in: sids
+            }
+        } : {}, "-createdAt -updatedAt -__v -_id")
             .limit(limit)
             .skip(skip)
             .then(docs => {
