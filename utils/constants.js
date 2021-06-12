@@ -19,9 +19,9 @@ const ClassificationTypes = {
 }
 
 const AWSconfig = {
-    BUCKET_NAME: "fredmat-schools",
-    IAM_USER_KEY: "AKIAIJZIL4QV45AAQC4A",
-    IAM_USER_SECRET: "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"
+    BUCKET_NAME: "null",
+    IAM_USER_KEY: "sorry bhai",
+    IAM_USER_SECRET: "kyu btau"
 };
 
 const { IAM_USER_KEY, IAM_USER_SECRET } = AWSconfig;
