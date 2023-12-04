@@ -1,19 +1,20 @@
 const Query = require("../Modals/Schools/QuerySchema");
 const School = require("../Modals/Schools/School");
 const SchoolAdmins = require("../Modals/Schools/SchoolAdmin");
-const { generateSchoolId } = require("../utils/common");
+const { generateSchoolId, convertSearchQueryToMongo } = require("../utils/common");
 const { FREE_CREDITS, QueryUnlockCredits } = require("../utils/constants");
 const SendResponse = require("../utils/Responses");
 
 
 const createSchool = async (req, res) => {
     const { schoolDetails, userDetails } = req.body;
-    if (!userDetails) return SendResponse(res, 400, {}, "Userdetails required", true);
+    // if (!userDetails) return SendResponse(res, 400, {}, "Userdetails required", true);
     schoolDetails.schoolId = generateSchoolId(schoolDetails.schoolName);
     const newSchool = new School(schoolDetails);
     newSchool.save().then((doc) => {
         updateCreditsInternally(schoolDetails.schoolId, FREE_CREDITS.firstTime)
             .then(isDone => {
+                return SendResponse(res, 200, doc, "School Created Successfully!")
                 if (isDone) {
                     SchoolAdmins.updateOne({ _id: userDetails._id }, {
                         $set: {
@@ -103,75 +104,21 @@ const getSchool = async (req, res) => {
     });
 };
 
-//api to search school by name or lacation
-// we have 
-//query -->string
-//type of school-->[String]
-//board-->[String]
-//classification-->[String]
-//fees-->[String]
-
 const searchSchools = async (req, res) => {
-    let { limit,
-        query,
-        board,
-        classification,
-        feeFrom,
-        feeTo,
-        schoolType,
-        skip,
-        sortBy
-    } = req.query;
-    console.log(req.query)
-    let FilterArray = [];
-
-    if (query) {
-        query = query.split(",");
-        FilterArray = FilterArray.concat([{ schoolName: { "$regex": `${query}`, "$options": "i" } },
-        {
-            "contactDetails.address": { "$regex": `${query}`, "$options": "i" }
-        }])
-    }
-    if (board) {
-        board = board.split(",")
-        FilterArray.push({
-            board: { "$in": board }
-        });
-    }
-    if (schoolType) {
-        schoolType = schoolType.split(",");
-        FilterArray.push({
-            schoolType: { "$in": schoolType }
-        })
-    }
-    if (classification) {
-        classification = classification.split(",");
-        FilterArray.push({
-            classification: { "$in": classification }
-        })
-    }
-    if (feeFrom && feeTo) {
-        feeForm = parseInt(feeFrom);
-        feeTo = parseInt(feeTo);
-        FilterArray.push({
-            "fees.annualFeeFrom": {
-                $gte: feeFrom,
-            },
-            "fees.annualFeeTo": {
-                $lte: feeTo
-            }
-        })
-    }
-    School.find(FilterArray.length > 0 ? {
-        "$or": FilterArray
-    } : {}, "-queries")
-        .skip(skip ? parseInt(skip) : 0)
-        .limit(limit ? parseInt(limit) : 40)
-        .then((docs) => {
-            return SendResponse(res, 200, docs, "OK!", docs.length > 0 ? false : true)
-        }).catch(err => {
-            console.log(err)
-        })
+    const search = req.query;
+    console.log("🚀 ~ file: Schools.js:108 ~ searchSchools ~ search:", search)
+    const query = convertSearchQueryToMongo(search);
+    console.log("🚀 ~ file: Schools.js:109 ~ searchSchools ~ query:", JSON.stringify(query))
+    School.find(query).then(docs => {
+        return SendResponse(res, 200, docs, "OK!", true)
+    })
+    // School.aggregate([{
+    //     $match: query
+    // }]).exec((error, result) => {
+    //     console.log("🚀 ~ file: Schools.js:115 ~ .exec ~ result:", result)
+    //     console.log("🚀 ~ file: Schools.js:115 ~ .exec ~ error:", error)
+    //     return SendResponse(res, 200, result, "OK!", true)
+    // })
 };
 
 

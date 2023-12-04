@@ -50,6 +50,9 @@ const SchoolSchema = new mongoose.Schema({
         maxlength: 40,
         required: true
     },
+    isAdmissionOpen: {
+        type: Boolean
+    },
     admin: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: "SchoolAdmins"
