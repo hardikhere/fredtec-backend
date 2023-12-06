@@ -1,12 +1,9 @@
-const { BoardTypes, ClassificationTypes, SchoolTypes, FREE_CREDITS } = require("../../utils/constants");
-const ContactSchema = require("./ContactSchema");
+const { BoardTypes, ClassificationTypes, SchoolTypes } = require("../../utils/constants");
 const FeeSchema = require("./FeeSchema");
-const { OtherInfoSchema, travelSchema } = require("./OtherInfoSchema");
+const { OtherInfoSchema } = require("./OtherInfoSchema");
 const mongoose = require("mongoose");
 const InfraSchema = require("./InfraSchema");
-const QuerySchema = require("./QuerySchema");
 const ReviewSchema = require("./ReviewSchema");
-const PillarsSchema = require("./PillarsSchema");
 const { PRE_COLLEGE, DAY, BOARDING, PLAY } = SchoolTypes;
 const { CBSE, ICGSE, ICSE, RBSE } = BoardTypes;
 const { BOYS, GIRLS, COED } = ClassificationTypes
@@ -26,23 +23,17 @@ const announcementsSchema = new mongoose.Schema({
     announcedBy: String
 }, { timestamps: true });
 
-const academicsScoreSchema = new mongoose.Schema({
-    grade: {
-        type: Number,
-        enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+const teacherSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
     },
-    isBoard: Boolean,
-    highestPercentage: {
-        type: Number,
-        max: 100
-    },
-    isVerified: {
-        type: Boolean,
-        default: false
-    },
-    remarks: String,
-    imageUrls: [String]
+    subjects: [String],
+    highestQualification: String,
+    image: String,
+    about: String
 })
+
 
 const SchoolSchema = new mongoose.Schema({
     schoolName: {
@@ -100,32 +91,15 @@ const SchoolSchema = new mongoose.Schema({
     }],
     logoUrl: String,
     parentRating: Number,
-    fredmatScore: Number,
     subjects: [String],
     infraDetails: InfraSchema,
     otherInfo: OtherInfoSchema,
-    travelInfo: travelSchema,
     queries: [{
         type: mongoose.SchemaTypes.ObjectId,
         ref: "Query"
     }],
     reviews: [ReviewSchema],
-    credits: {
-        type: Number,
-        default: FREE_CREDITS.firstTime
-    },
     announcements: [announcementsSchema],
-    classAcademicsScore: [academicsScoreSchema],
-    boardScore: {
-        type: Number
-    },
-    nonBoardScore: {
-        type: Number
-    },
-    totalAcademicsScore: {
-        type: Number
-    },
-    pillars: [PillarsSchema],
     pinCode: {
         type: String
     },
@@ -134,7 +108,8 @@ const SchoolSchema = new mongoose.Schema({
     },
     latitude: {
         type: mongoose.SchemaTypes.Decimal128
-    }
+    },
+    teachers: [teacherSchema]
 
 }, { timestamps: true });
 
