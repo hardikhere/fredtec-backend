@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
 const ReviewSchema = new mongoose.Schema({
-    kind: {
-        type: String,
-        enum: ["user", "fredmat"],
-        required: true
-    },
     infrastructure: Number,
     academics: Number,
     facilities: Number,
@@ -15,10 +10,6 @@ const ReviewSchema = new mongoose.Schema({
     by: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: "User"
-    },
-    title: {
-        type: String,
-        maxlength: 40,
     },
     content: {
         type: String,

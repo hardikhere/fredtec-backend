@@ -17,6 +17,12 @@ async function jwtGenerator(id) {
 
 const convertSearchQueryToMongo = (search) => {
   const mongoObj = { $or: [] };
+  // adding a check for query search 
+  if (!!search?.query?.length) {
+    mongoObj["$text"] = { $search: search.query }
+  }
+
+  delete search.query;
   const obj = Object.keys(search).reduce((acc, curValue) => {
     const keyFilter = search[curValue];
     if (keyFilter.length === 0) return acc;

@@ -138,6 +138,7 @@ const SchoolSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
+SchoolSchema.index({ schoolName: 'text', address: 'text', 'reviews.content': "text", about: "text" })
 
 
 const School = mongoose.model("School", SchoolSchema);

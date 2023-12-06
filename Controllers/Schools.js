@@ -106,19 +106,13 @@ const getSchool = async (req, res) => {
 
 const searchSchools = async (req, res) => {
     const search = req.query;
-    console.log("🚀 ~ file: Schools.js:108 ~ searchSchools ~ search:", search)
-    const query = convertSearchQueryToMongo(search);
-    console.log("🚀 ~ file: Schools.js:109 ~ searchSchools ~ query:", JSON.stringify(query))
+    let query = convertSearchQueryToMongo(search);
+    if (query?.$or?.length === 0) {
+        query = {}
+    }
     School.find(query).then(docs => {
         return SendResponse(res, 200, docs, "OK!", true)
     })
-    // School.aggregate([{
-    //     $match: query
-    // }]).exec((error, result) => {
-    //     console.log("🚀 ~ file: Schools.js:115 ~ .exec ~ result:", result)
-    //     console.log("🚀 ~ file: Schools.js:115 ~ .exec ~ error:", error)
-    //     return SendResponse(res, 200, result, "OK!", true)
-    // })
 };
 
 
