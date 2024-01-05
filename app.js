@@ -13,7 +13,7 @@ const helmet = require("helmet");
 connect_db();// connect to mongoDB
 
 var whitelist = ['http://localhost:3000/', 'http://localhost:8080/',
-    "https://fredmat-frontend.hardikhere.vercel.app/"
+    "https://edu-start.vercel.app/"
 ];
 var corsOptions = {
     origin: function (origin, callback) {
@@ -28,7 +28,7 @@ var corsOptions = {
 
 //app middlewares
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(
     bodyParser.urlencoded({
         extended: false,
